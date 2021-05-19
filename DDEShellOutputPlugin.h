@@ -6,10 +6,10 @@
 #define DDE_PSTATE_DDEPSTATEPLUGIN_H
 
 #include "DDEShellOutputPlugin.h"
+#include "MShell.h"
 #include <dde-dock/pluginsiteminterface.h>
 #include <QObject>
 #include <QThread>
-#include <QMap>
 #include <QList>
 #include <QTimer>
 #include <QLabel>
@@ -46,9 +46,15 @@ public:
 //    void setSortKey(const QString &itemKey, const int order) Q_DECL_OVERRIDE;
 
 private slots:
+    void timerFinished();
 
 private:
+    void applyShell(MShell mShell);
+    QProcess process;
+
     QLabel *p_itemWidget;
+    MShell currShell;
+    QTimer *shellTimer_p;
 };
 
 

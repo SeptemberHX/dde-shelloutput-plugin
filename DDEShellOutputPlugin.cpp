@@ -12,6 +12,12 @@
 DDEShellOutputPlugin::DDEShellOutputPlugin(QObject *parent) : QObject(parent) {
     this->p_itemWidget = new QLabel();
     this->p_itemWidget->setText("DDE Shell Output Plugin");
+    this->p_itemWidget->setFixedWidth(250);
+
+    this->shellTimer_p = new QTimer(this);
+
+    MShell testShell("date", "", 1, SEC);
+    this->applyShell(testShell);
 }
 
 const QString DDEShellOutputPlugin::pluginName() const {
@@ -67,4 +73,33 @@ QWidget *DDEShellOutputPlugin::itemWidget(const QString &itemKey) {
 QWidget *DDEShellOutputPlugin::itemPopupApplet(const QString &itemKey) {
     Q_UNUSED(itemKey)
     return nullptr;
+}
+
+void DDEShellOutputPlugin::applyShell(MShell mShell) {
+    this->currShell = mShell;
+
+    qlonglong t = this->currShell.getInterval();
+    switch (this->currShell.getType()) {
+        case SEC:
+            t *= 1000;
+            break;
+        case MIN:
+            t *= 60 * 1000;
+            break;
+        case HOUR:
+            t *= 60 * 60 * 1000;
+            break;
+        default:
+            break;
+    }
+    this->shellTimer_p->singleShot(t, this, &DDEShellOutputPlugin::timerFinished);
+}
+
+void DDEShellOutputPlugin::timerFinished() {
+    this->shellTimer_p->stop();
+    process.start(this->currShell.getCommand());
+    process.waitForFinished();
+    QString output = process.readAllStandardOutput();
+    this->p_itemWidget->setText(output.trimmed());
+    this->applyShell(this->currShell);
 }
