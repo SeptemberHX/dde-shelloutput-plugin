@@ -11,8 +11,9 @@ MShell::MShell()
 
 }
 
-MShell::MShell(QString command, QString outputReg, int interval, IntervalType type)
-    : command(command)
+MShell::MShell(QString name, QString command, QString outputReg, int interval, IntervalType type)
+    : name(name)
+    , command(command)
     , outputReg(outputReg)
     , interval(interval)
     , type(type)
@@ -50,4 +51,12 @@ IntervalType MShell::getType() const {
 
 void MShell::setType(IntervalType type) {
     MShell::type = type;
+}
+
+const QString &MShell::getName() const {
+    return name;
+}
+
+void MShell::setName(const QString &name) {
+    MShell::name = name;
 }

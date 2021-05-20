@@ -3,6 +3,7 @@
 //
 
 #include "DDEShellOutputPlugin.h"
+#include "DDEShellOutputConfig.h"
 #include <QJsonObject>
 #include <QDebug>
 #include <iostream>
@@ -11,13 +12,15 @@
 
 DDEShellOutputPlugin::DDEShellOutputPlugin(QObject *parent) : QObject(parent) {
     this->p_itemWidget = new QLabel();
+    this->p_itemWidget->setStyleSheet(QString("color:%1").arg(DDEShellOutputConfig::getInst()->getFontColor().name()));
     this->p_itemWidget->setText("DDE Shell Output Plugin");
     this->p_itemWidget->setFixedWidth(250);
 
     this->shellTimer_p = new QTimer(this);
 
-    MShell testShell("date", "", 1, SEC);
-    this->applyShell(testShell);
+    if (!DDEShellOutputConfig::getInst()->getShellList().isEmpty()) {
+        this->applyShell(DDEShellOutputConfig::getInst()->getShellList().first());
+    }
 }
 
 const QString DDEShellOutputPlugin::pluginName() const {

@@ -17,7 +17,7 @@ class MShell {
 
 public:
     MShell();
-    MShell(QString command, QString outputReg, int interval, IntervalType type);
+    MShell(QString name, QString command, QString outputReg, int interval, IntervalType type);
 
     const QString &getCommand() const;
 
@@ -35,11 +35,16 @@ public:
 
     void setType(IntervalType type);
 
+    const QString &getName() const;
+
+    void setName(const QString &name);
+
 private:
     QString command;
     QString outputReg;
     int interval;
     IntervalType type;
+    QString name;
 };
 
 
