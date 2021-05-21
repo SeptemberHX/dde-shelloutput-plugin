@@ -4,7 +4,6 @@
 
 #include "DDEShellOutputPlugin.h"
 #include "DDEShellOutputConfig.h"
-#include <QJsonObject>
 #include <QDebug>
 #include <iostream>
 
@@ -14,7 +13,7 @@ DDEShellOutputPlugin::DDEShellOutputPlugin(QObject *parent) : QObject(parent) {
     this->p_itemWidget = new QLabel();
     this->p_itemWidget->setStyleSheet(QString("color:%1").arg(DDEShellOutputConfig::getInst()->getFontColor().name()));
     this->p_itemWidget->setText("DDE Shell Output Plugin");
-    this->p_itemWidget->setFixedWidth(250);
+    this->p_itemWidget->setFixedWidth(DDEShellOutputConfig::getInst()->getWidth());
 
     this->shellTimer_p = new QTimer(this);
 
@@ -103,6 +102,25 @@ void DDEShellOutputPlugin::timerFinished() {
     process.start(this->currShell.getCommand());
     process.waitForFinished();
     QString output = process.readAllStandardOutput();
-    this->p_itemWidget->setText(output.trimmed());
+    QString outputAfterReg;
+
+    if (this->currShell.getOutputReg().isEmpty()) {
+        outputAfterReg = output;
+    } else {
+        QRegExp regExp(this->currShell.getOutputReg());
+        regExp.indexIn(output.trimmed());
+                foreach (QString str, regExp.capturedTexts()) {
+                outputAfterReg += str + " ";
+            }
+    }
+
+    int width = DDEShellOutputConfig::getInst()->getWidth();
+    if (DDEShellOutputConfig::getInst()->isAutoWidth()) {
+        QFontMetrics fm(this->p_itemWidget->font());
+        width = 2 + fm.boundingRect(outputAfterReg).width();
+    }
+    this->p_itemWidget->setFixedWidth(width);
+    this->p_itemWidget->setText(outputAfterReg.trimmed());
+
     this->applyShell(this->currShell);
 }

@@ -35,6 +35,7 @@ DDEShellOutputConfig::DDEShellOutputConfig() {
     QSettings settings("dde-shelloutput", "dde-shelloutput");
     this->fontColor = QColor(settings.value("config/fontColor", "#FFFFFF").toString());
     this->width = settings.value("config/width", 250).toInt();
+    this->autoWidth = settings.value("config/autoWidth", true).toBool();
 
     settings.beginGroup("shell");
     foreach (QString key, settings.childGroups()) {
@@ -72,4 +73,12 @@ int DDEShellOutputConfig::getWidth() const {
 
 void DDEShellOutputConfig::setWidth(int width) {
     DDEShellOutputConfig::width = width;
+}
+
+bool DDEShellOutputConfig::isAutoWidth() const {
+    return autoWidth;
+}
+
+void DDEShellOutputConfig::setAutoWidth(bool autoWidth) {
+    DDEShellOutputConfig::autoWidth = autoWidth;
 }

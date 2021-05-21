@@ -11,7 +11,7 @@ MShell::MShell()
 
 }
 
-MShell::MShell(QString name, QString command, QString outputReg, int interval, IntervalType type)
+MShell:: MShell(QString name, QString command, QString outputReg, int interval, IntervalType type)
     : name(name)
     , command(command)
     , outputReg(outputReg)

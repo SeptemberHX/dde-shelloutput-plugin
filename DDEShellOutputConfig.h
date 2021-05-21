@@ -27,12 +27,17 @@ public:
 
     void setWidth(int width);
 
+    bool isAutoWidth() const;
+
+    void setAutoWidth(bool autoWidth);
+
 private:
     DDEShellOutputConfig();
     void saveConfig();
 
     static DDEShellOutputConfig *inst;
     int width;
+    bool autoWidth;
 
     QList<MShell> shellList;
     QColor fontColor;
