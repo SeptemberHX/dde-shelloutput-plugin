@@ -12,8 +12,11 @@
 DDEShellOutputPlugin::DDEShellOutputPlugin(QObject *parent) : QObject(parent) {
     this->p_itemWidget = new QLabel();
     this->p_itemWidget->setStyleSheet(QString("color:%1").arg(DDEShellOutputConfig::getInst()->getFontColor().name()));
-    this->p_itemWidget->setText("DDE Shell Output Plugin");
-    this->p_itemWidget->setFixedWidth(DDEShellOutputConfig::getInst()->getWidth());
+    this->p_itemWidget->setText("◔◡◔");
+
+    if (!DDEShellOutputConfig::getInst()->isAutoWidth()) {
+        this->p_itemWidget->setFixedWidth(DDEShellOutputConfig::getInst()->getWidth());
+    }
 
     this->shellTimer_p = new QTimer(this);
 
@@ -55,7 +58,7 @@ void DDEShellOutputPlugin::pluginStateSwitched() {
 }
 
 const QString DDEShellOutputPlugin::pluginDisplayName() const {
-    return QStringLiteral("DDE Shell Output");
+    return QStringLiteral("◔◡◔");
 }
 
 void DDEShellOutputPlugin::pluginSettingsChanged() {
@@ -117,7 +120,7 @@ void DDEShellOutputPlugin::timerFinished() {
     int width = DDEShellOutputConfig::getInst()->getWidth();
     if (DDEShellOutputConfig::getInst()->isAutoWidth()) {
         QFontMetrics fm(this->p_itemWidget->font());
-        width = 2 + fm.boundingRect(outputAfterReg).width();
+        width = fm.boundingRect(outputAfterReg).width();
     }
     this->p_itemWidget->setFixedWidth(width);
     this->p_itemWidget->setText(outputAfterReg.trimmed());
